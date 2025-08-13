@@ -14,9 +14,6 @@ import com.example.demo.models.To_do.Enums.To_DoPriority;
 import com.example.demo.models.To_do.Enums.To_DoStatus;
 import com.example.demo.repository.To_DoRepository;
 import com.example.demo.service.ResourcesException.DataBaseException;
-import com.example.demo.service.ResourcesException.ResourcePriorityException;
-import com.example.demo.service.ResourcesException.ResourceStatusException;
-import com.example.demo.service.ResourcesException.ResourcesDeadlineException;
 import com.example.demo.service.ResourcesException.ResourcesNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -33,36 +30,23 @@ public class To_DoService {
 
     // List to-do by id...
     public To_Do findById(Long id){
-        
         Optional<To_Do> to_do = repository.findById(id);
         return to_do.orElseThrow(() -> new ResourcesNotFoundException(id));
     }
 
     // Lists all to-do that have this status as a parameter...
     public List<To_Do> findAllByStatus(To_DoStatus status){
-        try {
-            return repository.findAllByStatus(status);
-        } catch (ResourceStatusException e) {
-            throw new ResourceStatusException(status);
-        }
+        return repository.findAllByStatus(status);
     }
 
     // Lists all to-do that have this priority as a parameter...
     public List<To_Do> findAllByPriority(To_DoPriority priority){
-        try {
-            return repository.findAllByPriority(priority);
-        } catch (ResourcePriorityException e) {
-            throw new ResourcePriorityException(priority);
-        }
+        return repository.findAllByPriority(priority);
     }
 
     // Lists all to-do that have this deadline as a parameter...
     public List<To_Do> findAllByDeadline(Date deadline){
-        try {
-            return repository.findAllByDeadline(deadline);
-        } catch (ResourcesDeadlineException e) {
-            throw new ResourcesDeadlineException(deadline);
-        }
+        return repository.findAllByDeadline(deadline);
     }
 
     public To_Do insert(To_Do to_do){
