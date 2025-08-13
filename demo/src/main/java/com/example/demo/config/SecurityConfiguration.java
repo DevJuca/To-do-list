@@ -17,8 +17,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http
         .csrf(AbstractHttpConfigurer::disable)
-        .formLogin(Customizer.withDefaults())
         .httpBasic(Customizer.withDefaults())
+        .formLogin(configurer -> {configurer.loginPage("/login").permitAll();})
         .authorizeHttpRequests(autorizer -> {
             autorizer.anyRequest().authenticated();})
         .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
