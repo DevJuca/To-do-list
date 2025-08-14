@@ -32,7 +32,6 @@ Permite criar, listar, atualizar e excluir tarefas, gerenciar subtarefas, aplica
 
 A **To-Do API** é uma solução para gerenciamento de tarefas e subtarefas com foco em **segurança**, **organização** e **produtividade**.
 Oferece autenticação e autorização baseada em *roles*, impedindo alterações não autorizadas e garantindo integridade das informações.
-Ideal para estudos, projetos internos e integração com sistemas maiores.
 
 ---
 
