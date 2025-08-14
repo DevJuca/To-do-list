@@ -92,7 +92,51 @@ A API segue a arquitetura **Camadas + Padrão MVC**:
 
 O projeto já vem configurado para usar o **banco H2** em memória.
 Para usar outro banco (MySQL, PostgreSQL, etc.), altere o arquivo `application.properties`:
+
 ---
+
+# 📦 Modelos de Dados (Entities)
+Com base nas funcionalidades e arquitetura, a API provavelmente utiliza os seguintes modelos de dados para mapear as tabelas do banco:
+
+---
+
+## 📝 Task
+Representa uma tarefa principal.
+
+### Atributos:
+- `id` (Long): Identificador único.
+- `titulo` (String): Título da tarefa.
+- `descricao` (String): Descrição da tarefa.
+- `status` (Enum): Estado da tarefa (`PENDENTE`, `EM_ANDAMENTO`, `CONCLUIDA`).
+- `prioridade` (Enum): Nível de importância (`BAIXA`, `MEDIA`, `ALTA`).
+- `prazo` (LocalDate): Data limite para conclusão.
+- `subtasks` (List<Subtask>): Relação de um-para-muitos com subtarefas.
+- `user` (User): Relação de muitos-para-um com o usuário que criou a tarefa.
+
+---
+
+## ✅ Subtask
+Representa uma subtarefa vinculada a uma tarefa principal.
+
+### Atributos:
+- `id` (Long): Identificador único.
+- `descricao` (String): Descrição da subtarefa.
+- `status` (Enum): Estado da subtarefa (`PENDENTE`, `CONCLUIDA`).
+- `task` (Task): Relação de muitos-para-um com a tarefa principal.
+
+---
+
+## 🗄 Hibernate e Mapeamento ORM
+
+O projeto utiliza **Hibernate** como implementação padrão do **JPA** (Java Persistence API) para realizar o mapeamento objeto-relacional (ORM).  
+Com o Hibernate, as classes **Entity** da aplicação são automaticamente convertidas em tabelas no banco de dados, e os atributos viram colunas.  
+
+Principais características no projeto:
+- Uso de anotações como `@Entity`, `@Table`, `@Id` e `@GeneratedValue`
+- Relacionamentos modelados com `@OneToMany`, `@ManyToOne` e `@JoinColumn`
+- Persistência automática via **Spring Data JPA**
+- Suporte a criação e atualização automática do schema (`spring.jpa.hibernate.ddl-auto`)
+- Integração transparente com bancos como **H2**, **MySQL** ou **PostgreSQL**
 
 ## ▶ Execução do Projeto
 
@@ -104,16 +148,38 @@ O sistema será iniciado em **http://localhost:8080**.
 ## 📡 Endpoints
 
 ### **Tarefas**
-- `POST /api/todos` → Criar tarefa
-- `GET /api/todos` → Listar todas
-- `GET /api/todos/{id}` → Buscar por ID
-- `PUT /api/todos/{id}` → Atualizar
-- `DELETE /api/todos/{id}` → Excluir
+- `POST /to-do` → Criar tarefa
+- `GET /to-do` → Listar todos os to-do
+- `GET /to-do/deadline/{deadline}` → Listar todos com o parâmetro deadline passado
+- `GET /to-do/priority/{priority}` → Listar todos com o parâmetro priority passado
+- `GET /to-do/status/{status}` → Listar todos com o parâmetro status passado
+- `GET /to-do/id/{id}` → Buscar por ID
+- `PUT /to-do/id/{id}` → Atualizar
+- `DELETE/to-do/id/{id}` → Excluir
 
 ### **Subtarefas**
-- `POST /api/todos/{id}/subtasks` → Criar subtarefa
-- `PUT /api/subtasks/{id}` → Atualizar subtarefa
-- `DELETE /api/subtasks/{id}` → Excluir subtarefa
+- `GET /subtasks` → Listar todas as subtarefas
+- `POST /subtasks` → Criar subtarefa
+- `GET /subtasks/deadline/{deadline}` → Listar todos com o parâmetro deadline passado
+- `GET /subtasks/priority/{priority}` → Listar todos com o parâmetro priority passado
+- `GET /subtasks/status/{status}` → Listar todos com o parâmetro status passado
+- `GET /subtasks/id/{id}` → Buscar por ID
+- `PUT subtasks/id/{id}` → Atualizar subtarefa
+- `DELETE /subtasks/id/{id}` → Excluir subtarefa
+
+---
+
+## 🖥️ Camada de Controller
+
+A camada **Controller** é responsável por receber as requisições HTTP, processar os dados de entrada e retornar as respostas adequadas para o cliente.  
+Utiliza anotações como `@RestController` e `@RequestMapping` para definir os endpoints da API.  
+
+Responsabilidades principais:
+- Mapear URLs para métodos Java
+- Receber e validar parâmetros de entrada
+- Chamar os métodos da camada **Service**
+- Retornar respostas padronizadas (JSON) para o cliente
+- Definir códigos de status HTTP apropriados para cada operação
 
 ---
 
@@ -181,8 +247,8 @@ Para acessar os endpoints, envie credenciais válidas no cabeçalho da requisiç
 
 ## 👥 Autorização e Roles
 
-- `USER` → Pode criar, listar e atualizar suas próprias tarefas
-- `ADMIN` → Pode gerenciar todas as tarefas e usuários
+- `USER` → Pode listar as tarefas
+- `ADMIN` → Tem todas as requisições disponíveis: GET,PUT,POST,DELETE
 
 ---
 
@@ -193,4 +259,3 @@ Para acessar os endpoints, envie credenciais válidas no cabeçalho da requisiç
 - Configurar backups se estiver usando banco persistente
 - Em produção, usar HTTPS e configurar CORS adequadamente
 
----
