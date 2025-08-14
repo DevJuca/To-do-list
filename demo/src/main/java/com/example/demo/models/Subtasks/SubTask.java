@@ -6,6 +6,7 @@ import java.util.Date;
 import com.example.demo.models.To_do.To_Do;
 import com.example.demo.models.To_do.Enums.To_DoPriority;
 import com.example.demo.models.To_do.Enums.To_DoStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
@@ -36,11 +37,10 @@ public class SubTask implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
     private String title;
-
     private String description;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "America/Sao_Paulo")
     private Date deadline;
 
     @Enumerated(EnumType.STRING)

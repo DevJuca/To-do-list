@@ -8,6 +8,7 @@ import java.util.List;
 import com.example.demo.models.Subtasks.SubTask;
 import com.example.demo.models.To_do.Enums.To_DoPriority;
 import com.example.demo.models.To_do.Enums.To_DoStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -37,6 +38,8 @@ public class To_Do implements Serializable {
     private Long id;
     private String title;
     private String description;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "America/Sao_Paulo")
     private Date deadline;
     
     @Enumerated(EnumType.STRING)

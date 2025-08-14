@@ -2,6 +2,7 @@ package com.example.demo.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -26,6 +27,10 @@ public class SecurityConfiguration {
         .httpBasic(Customizer.withDefaults())
         .formLogin(configurer -> {configurer.loginPage("/login").permitAll();})
         .authorizeHttpRequests(autorizer -> {
+            autorizer.requestMatchers("/login").permitAll();
+            autorizer.requestMatchers(HttpMethod.GET, "to-do/**").hasAnyRole("USER", "ADMIN");
+            autorizer.requestMatchers("to-do/**").hasRole("ADMIN");
+            autorizer.requestMatchers("subtasks/**").hasRole("ADMIN");
             autorizer.anyRequest().authenticated();})
         .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
         .build();

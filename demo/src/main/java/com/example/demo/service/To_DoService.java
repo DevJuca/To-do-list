@@ -77,6 +77,15 @@ public class To_DoService {
 
     // Auxiliar funciton to update Status of to-do...
     private void updateData(To_Do entity, To_Do to_do){
+        // Check if you are trying to complete the task
+    if (to_do.getStatus() == To_DoStatus.DONE) {
+        // Check if there is any unfinished subtask
+        boolean hasPending = entity.getSubtask().stream()
+            .anyMatch(subtask -> subtask.getStatus() != To_DoStatus.DONE);
+        if (hasPending) {
+            throw new IllegalStateException("Unable to complete task with pending subtasks.");
+        }
+    }
         entity.setStatus(to_do.getStatus());
     }
 }

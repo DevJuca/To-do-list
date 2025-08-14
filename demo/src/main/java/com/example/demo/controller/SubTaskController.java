@@ -72,7 +72,7 @@ public class SubTaskController {
     }
 
     // Update a data of subtask...
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = "id/{id}")
     public ResponseEntity<SubTask> update(@PathVariable Long id, @RequestBody SubTask subtask){
         subtask = service.update(id, subtask);
         return ResponseEntity.ok().body(subtask);
